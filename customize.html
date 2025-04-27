@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Customize Your Theme</title>
+    <link rel="icon" type="image/png" href="worlwide.png" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 50px;
+        }
+
+        .options {
+            background: #f9f9f9;
+            padding: 30px;
+            display: inline-block;
+            border-radius: 10px;
+        }
+
+        select, button {
+            padding: 10px;
+            margin: 10px;
+            font-size: 16px;
+        }
+        #musicBtn {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #1DB954;
+            border: none;
+            color: white;
+            padding: 12px 20px;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            z-index: 9999;
+        }
+    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.1" />
+</head>
+<body>
+    <!-- 🎵 Background Music Controls -->
+    <button onclick="toggleMusic()" id="musicBtn">🎵 Press To Play This Masterpiece While Customizing</button>
+
+    <audio id="bgMusic" loop>
+        <source src="halal.wav" type="audio/wav">
+        Your browser does not support the audio element.
+    </audio>
+    <h1>🎨 Customize Your Page</h1>
+    <div class="options">
+        <label>Choose Background Color:</label><br>
+        <select id="bgColor">
+            <option value="#ffffff">White</option>
+            <option value="#fdf6e3">Light Cream</option>
+            <option value="#e0f7fa">Light Blue</option>
+            <option value="#fce4ec">Pink</option>
+            <option value="#e8f5e9">Light Green</option>
+            <option value="#fff3e0">Light Orange</option>
+            <option value="#f3e5f5">Light Purple</option>
+            <option value="#f0f4c3">Light Yellow</option>
+            <option value="#e1f5fe">Light Cyan</option>
+            <option value="#fce4ec">Light Pink</option>
+            <option value="#f1f8e9">Light Lime</option>
+            <option value="#e8eaf6">Light Indigo</option>
+            <option value="#f5f5f5">Light Grey</option>
+            <option value="#ffebee">Light Red</option>
+            <option value="#e3f2fd">Light Blue</option>
+            <option value="#f1f8e9">Light Green</option>
+
+            <option value="#fce4ec">Light Pink</option>
+
+        </select><br>
+
+        <label>Choose Font Style:</label><br>
+        <select id="fontStyle">
+            <option value="Arial">Arial</option>
+            <option value="Verdana">Verdana</option>
+            <option value="Times New Roman">Times New Roman</option>
+            <option value="Tahoma">Tahoma</option>
+            <option value="Trebuchet MS">Trebuchet MS</option>
+            <option value="Impact">Impact</option>
+            <option value="Lucida Console">Lucida Console</option>
+            <option value="Georgia">Georgia</option>
+            <option value="Courier New">Courier New</option>
+            <option value="Comic Sans MS">Comic Sans MS</option>
+            <option value="Palatino Linotype">Palatino Linotype</option>
+            <option value="Garamond">Garamond</option>
+            <option value="Bookman Old Style">Bookman Old Style</option>
+            <option value="Arial Black">Arial Black</option>
+            <option value="Arial Narrow">Arial Narrow</option>
+            <option value="Century Gothic">Century Gothic</option>
+
+
+        </select><br>
+
+        <button onclick="applyTheme()">Apply</button>
+        <button onclick="goToGame()">Next</button>
+        <button onclick="goBack()">Back To Previous Page</button>
+    </div>
+
+    <script>
+        function applyTheme() {
+            const bgColor = document.getElementById("bgColor").value;
+            const font = document.getElementById("fontStyle").value;
+
+            document.body.style.backgroundColor = bgColor;
+            document.body.style.fontFamily = font;
+        }
+
+        function goBack() {
+            window.location.href = "summary.html";
+        }
+
+        function goToGame() {
+            window.location.href = "thankyou.html";
+        }
+        function toggleMusic() {
+            const bgMusic = document.getElementById('bgMusic');
+            const musicBtn = document.getElementById('musicBtn');
+            if (bgMusic.paused) {
+                bgMusic.play();
+                musicBtn.textContent = "Press To Pause This Masterpiece";
+            } else {
+                bgMusic.pause();
+                musicBtn.textContent = "Press To Play This Masterpiece";
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quick Math Game</title>
+    <link rel="icon" type="image/png" href="game.png" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f2f2f2;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .game-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            display: inline-block;
+        }
+
+        .score, .streak, .highest-score, .timer {
+            font-size: 1.2em;
+            margin-bottom: 15px;
+        }
+
+        .question {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+        }
+
+        input[type="number"] {
+            padding: 10px;
+            font-size: 1em;
+            width: 100px;
+            margin-bottom: 20px;
+        }
+
+        button, select {
+            padding: 10px 20px;
+            font-size: 1em;
+            margin: 5px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+        }
+
+        button {
+            background-color: #28a745;
+            color: white;
+        }
+
+            button:hover {
+                background-color: #218838;
+            }
+
+        .back-button {
+            background-color: #007bff;
+        }
+
+            .back-button:hover {
+                background-color: #0056b3;
+            }
+
+        .restart-button {
+            background-color: #ff4757;
+        }
+
+            .restart-button:hover {
+                background-color: #e84118;
+            }
+
+        .hint-button {
+            background-color: #ffc107;
+            color: black;
+        }
+
+            .hint-button:hover {
+                background-color: #e0a800;
+            }
+
+        #hintText {
+            font-style: italic;
+            color: #555;
+            margin-top: 10px;
+        }
+        #musicBtn {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #1DB954;
+            border: none;
+            color: white;
+            padding: 12px 20px;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            z-index: 9999;
+        }
+    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.1" />
+</head>
+<body>
+    <!-- 🎵 Background Music Controls -->
+    <button onclick="toggleMusic()" id="musicBtn"> Press To Play This Masterpiece While Thinking</button>
+
+    <audio id="bgMusic" loop>
+        <source src="ctrl.wav" type="audio/wav">
+        Your browser does not support the audio element.
+    </audio>
+
+
+
+
+    <div class="game-container">
+        <h2>🧠 Quick Math Game</h2>
+
+        <label for="difficulty">Select Difficulty:</label>
+        <select id="difficulty" onchange="restartGame()">
+            <option value="easy">Easy (0–9)</option>
+            <option value="medium">Medium (10-20)</option>
+            <option value="hard">Hard (20-40)</option>
+        </select>
+
+        <div class="score">Score: <span id="score">0</span></div>
+        <div class="streak">Streak: <span id="streak">0</span></div>
+        <div class="highest-score">Highest Score: <span id="highestScore">0</span></div>
+        <div class="timer">Time Left: <span id="timer">30</span> seconds</div>
+        <div class="question" id="question">What is 0 + 0?</div>
+
+        <div>
+            <input type="number" id="answer" placeholder="Your answer" />
+        </div>
+
+        <div>
+            <button onclick="checkAnswer()">Submit</button>
+            <button class="hint-button" onclick="showHint()">Hint</button>
+            <button class="restart-button" onclick="restartGame()">Restart</button>
+            <button class="back-button" onclick="goBackToHome()">Home</button>
+        </div>
+        <p id="hintText"></p>
+    </div>
+
+    <!-- Audio -->
+    <audio id="correctSound" src="https://cdn.pixabay.com/audio/2022/03/15/audio_9fdd08cc06.mp3"></audio>
+    <audio id="wrongSound" src="https://cdn.pixabay.com/audio/2022/03/15/audio_90b22e26e2.mp3"></audio>
+
+    <script>
+        let score = 0, streak = 0, highestScore = 0;
+        let num1, num2, operation, correctAnswer;
+        let timeLeft = 30;
+        let timerInterval;
+        const timerElement = document.getElementById('timer');
+        const difficultySelect = document.getElementById('difficulty');
+
+        highestScore = localStorage.getItem('highestScore') || 0;
+        document.getElementById('highestScore').textContent = highestScore;
+
+        function getRangeByDifficulty() {
+            const level = difficultySelect.value;
+            if (level === "easy") return 10;
+            if (level === "medium") return 21;
+            return 51; // hard
+        }
+
+        function generateQuestion() {
+            const range = getRangeByDifficulty();
+            num1 = Math.floor(Math.random() * range);
+            num2 = Math.floor(Math.random() * range);
+            const operations = ['+', '-', 'x'];
+            operation = operations[Math.floor(Math.random() * operations.length)];
+
+            switch (operation) {
+                case '+': correctAnswer = num1 + num2; break;
+                case '-': correctAnswer = num1 - num2; break;
+                case 'x': correctAnswer = num1 * num2; break;
+            }
+
+            document.getElementById('question').textContent = `What is ${num1} ${operation} ${num2}?`;
+        }
+
+        function checkAnswer() {
+            const userAnswer = parseInt(document.getElementById('answer').value);
+            if (userAnswer === correctAnswer) {
+                document.getElementById('correctSound').play();
+                streak++; score++; timeLeft += 5;
+                alert(`✅ Correct! +5 seconds bonus. Streak: ${streak}`);
+            } else {
+                document.getElementById('wrongSound').play();
+                alert(`❌ Wrong! The correct answer was ${correctAnswer}`);
+                streak = 0;
+            }
+            updateDisplay();
+            generateQuestion();
+        }
+
+        function updateDisplay() {
+            document.getElementById('score').textContent = score;
+            document.getElementById('streak').textContent = streak;
+            timerElement.textContent = timeLeft;
+            document.getElementById('answer').value = '';
+        }
+
+        function showHint() {
+            let hint = "";
+            switch (operation) {
+                case '+': hint = "Add the two numbers together."; break;
+                case '-': hint = "Subtract the second number from the first."; break;
+                case 'x': hint = "Multiply the two numbers."; break;
+                default: hint = "No hint available.";
+            }
+            document.getElementById('hintText').textContent = hint;
+        }
+
+        function startTimer() {
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                timerElement.textContent = timeLeft;
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    endGame();
+                }
+            }, 1000);
+        }
+
+        function endGame() {
+            if (score > highestScore) {
+                highestScore = score;
+                localStorage.setItem('highestScore', highestScore);
+                document.getElementById('highestScore').textContent = highestScore;
+                alert(`🎉 New High Score: ${highestScore}!`);
+            } else {
+                alert(`⏱️ Time's up! Your score: ${score}`);
+            }
+            document.getElementById('answer').disabled = true;
+        }
+
+        function restartGame() {
+            score = 0;
+            streak = 0;
+            timeLeft = 30;
+            document.getElementById('answer').disabled = false;
+            document.getElementById('hintText').textContent = '';
+            updateDisplay();
+            generateQuestion();
+            startTimer();
+        }
+
+        function goBackToHome() {
+            window.location.href = "index.html";
+        }
+
+        // Start game on load
+        restartGame();
+        function toggleMusic() {
+            const bgMusic = document.getElementById('bgMusic');
+            const musicBtn = document.getElementById('musicBtn');
+            if (bgMusic.paused) {
+                bgMusic.play();
+                musicBtn.textContent = "Press To Pause This Masterpiece";
+            } else {
+                bgMusic.pause();
+                musicBtn.textContent = "Press To Play This Masterpiece";
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>🎉 Thank You Page 🎉</title>
+    <link rel="icon" type="image/png" href="worlwide.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: black;
+            text-align: center;
+            padding: 50px;
+            color: white;
+            overflow: hidden;
+        }
+
+        img {
+            width: 180px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+            margin-top: 20px;
+        }
+
+        button {
+            margin: 15px;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #218838;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+            button:hover {
+                background-color: #ffd800;
+                color: black;
+            }
+    </style>
+</head>
+<body>
+    <h1>✅ Thank You for Registering! 🎊</h1>
+    <h2>Meet The Creator 👨‍💻👋</h2>
+    <img src="unnamed.jpg" alt="Creator Image 🖼️">
+    <br>
+
+    <button onclick="goBack()">⬅ Back To Previous Page 🔙</button>
+
+    <!-- 🎉 Confetti Effect Script 🎉 -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script>
+        function goBack() {
+            window.location.href = "customize.html"; // Change the link if needed
+        }
+
+        // 🎉 Auto-launch confetti on page load
+        confetti({
+            particleCount: 150,
+            spread: 90,
+            origin: { y: 0.6 }
+        });
+    </script>
+</body>
+</html>
